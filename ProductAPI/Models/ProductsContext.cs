@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProductAPI.Models;
 
 namespace ProductsAPI.Models
 {
-    public class ProductsContext : DbContext
+    public class ProductsContext : IdentityDbContext<AppUser, AppRole , int>
     {
         public ProductsContext(DbContextOptions<ProductsContext> options) : base(options)
         {
