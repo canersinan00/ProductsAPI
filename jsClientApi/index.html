@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <button onclick="getProducts()">Get Products</button>
+    <button onclick="getProductById()">Get Product By Id</button>
+    <button onclick="login()">Login</button>
+
+
+    
+    <div id="divProducts"></div>
+
+    <script>
+
+
+        const login = async () => {
+            const response = await fetch("http://localhost:5191/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: "info@canersinan.com",
+                    password: "123456"
+                })
+            });
+
+            const result = await response.json();
+            localStorage.setItem("token", JSON.stringify(result.token));
+        }
+
+        const getProducts = async () => {
+        const response = await fetch("http://localhost:5191/api/products");
+        const products = await response.json();
+        console.log(products);
+        displayProducts(products);
+
+        }
+        const getProductById = async () => {
+        const token = JSON.parse(localStorage.getItem("token"));
+        const response = await fetch("http://localhost:5191/api/products/4", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+            });
+        const product = await response.json();
+        displayProduct(product);
+        }
+
+        const displayProduct = (product) => {
+            const parent = document.getElementById("divProducts");
+
+                parent.innerHTML = `
+                    <div>
+                        <h5>${product.name}</h5>
+                        <p>${product.price}</p>
+                    </div>
+                `;
+            ;
+        }
+
+        const displayProducts = (products) => {
+            const parent = document.getElementById("divProducts");
+
+            products.forEach(prd => {
+                parent.innerHTML += `
+                    <div>
+                        <h5>${prd.name}</h5>
+                        <p>${prd.price}</p>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
